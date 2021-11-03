@@ -1,32 +1,19 @@
-package stack;
 import java.io.*;
 import java.util.*;
-s
-public class Stack
-{
-    private class node
-    // node class: 
-    {
-      int data;
-      node link;
+
+public class Stack <obj> {
+    private class node<obj>{
+      obj data;
+      node<obj> link;
     }
+    node<obj> top;
     
-    node top;
-    
-    Stack()
-    // empty top initialization
-    {
+    public Stack(){
         this.top=null;
     }
     
-    public void push(int x)
-    {
-        node now= new node();
-        
-        //if(now==null){
-        //    System.out.print("\n ");
-         //   return; 
-        //}    
+    public void push(obj x){
+        node<obj> now= new node();  
         
         now.data=x;
         now.link=top;
@@ -39,7 +26,7 @@ public class Stack
         return top==null;
     }
     
-    public int peek()
+    public obj peek()
     {
         if(!isempty())
         {
@@ -48,7 +35,7 @@ public class Stack
         else
         {
             System.out.print("Empty stack!");
-            return -1;
+            return null;
         }
     }
     public void pop()
@@ -58,10 +45,9 @@ public class Stack
             System.out.printf("\nEmpty stack, cannot pop any more!");
             return;
         }
-        
-        top=(top).link;
+        top=top.link;
     }
-    public void display()
+    public void print()
     {
         if(top==null)
         {
@@ -72,36 +58,38 @@ public class Stack
             node temp=top;
             while(temp!=null)
             {
-                System.out.printf("%d->",temp.data);
+                System.out.printf("%s->",temp.data);
                 
                 temp=temp.link;
             }
         }
     }
     public  static void main(String[] args){
-        Stack obj=new Stack();
-        assert obj.isempty()==true;
-        System.out.printf("push 1\n");
+        Stack<String> stack=new Stack<String>();
+        assert stack.isempty()==true;
+        System.out.printf("push a\n");
 
-        obj.push(1);
-        assert obj.peek() ==1;
+        stack.push("a");
+        assert stack.peek() =="a";
         
-        assert obj.isempty()==false;
-        System.out.printf("push 2\n");
+        assert stack.isempty()==false;
+        System.out.printf("push b\n");
 
-        obj.push(2);
-        assert obj.peek()==2;
+        stack.push("b");
+        assert stack.peek()=="b";
 
-        obj.display();
+        stack.print();
         
-        System.out.printf("\nTop element is %d\n",obj.peek());
-        System.out.printf("pop 2 times");
+        System.out.printf("\nTop element is %s\n",stack.peek());
+        System.out.printf("pop 2 times \n");
 
-        obj.pop();
-        assert obj.peek()==1;
+        stack.pop();
+        assert stack.peek()=="a";
 
-        obj.pop();
-        assert obj.isempty()==true;
+        stack.pop();
+        assert stack.isempty()==true;
+        System.out.printf("\nTop element is %s\n",stack.peek());
+
     }
 }
 
