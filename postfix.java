@@ -1,4 +1,6 @@
 import java.util.*;
+
+import javax.print.DocFlavor.STRING;
 import javax.xml.transform.OutputKeys;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,11 +12,12 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.StringReader;
 
-public class postfix {
-
+public class Postfix {
+    static int tmp_keeper = 0;  
+    
     public static void main(String args[]) throws IOException{
         //test code: 
-        postfix(args);
+        to_postfix(args);
     }
     static int precedence(char c){
         // the order of the operations:
@@ -25,10 +28,35 @@ public class postfix {
             case '*':
             case '/':
                 return 2;
-            case '^':
-                return 3;
+ 
         }
         return -1;
+    }
+    static int precedence_postfix(String c){
+        // the order of the operations:
+        switch (c){
+            case "+":
+            case "-":
+                return 1;
+            case "*":
+            case "/":
+                return 2;
+ 
+        }
+        return -1;
+    }
+    static String opcode(String c ) {
+        switch(c) {
+            case "+":
+                return "AD";
+            case "-":
+                return "SB";
+            case "*":
+                return "ML";
+            case "/":
+                return "DV";
+        }
+        return "";
     }
     public static boolean isoperand(char c) {
         //check operand
@@ -91,7 +119,7 @@ public class postfix {
         }
         return true;
     }
-    public static String I2P(String infix) {
+    public  static String I2P(String infix) {
         String result = "";
         Stack<Character> stack = new Stack<>();
         for (int i = 0; i <infix.length() ; i++) {
@@ -127,7 +155,7 @@ public class postfix {
         return result;
     }
     
-    public static void postfix(String[] args) throws IOException {
+    public static void to_postfix(String[] args) throws IOException {
         if (! checkinput(args)) {
             System.out.print("input error!");
 
@@ -166,5 +194,37 @@ public class postfix {
         writer.close();
     }
 
-
+    public static String P2A(String postfix) {
+        //clear temporary memories:
+        tmp_keeper=0;
+        String[] splitted=postfix.split("\s+");
+        String result = "";
+        Stack<String> stack = new Stack<>();
+        for (int i = 0; i <splitted.length ; i++) {
+            String cur =splitted[i];
+                
+            if(precedence_postfix(cur)>0){
+                //if we have an operation
+                stack.push(cur);
+            }
+            else {
+                String right=stack.peek();
+                stack.pop();
+                String left=stack.peek();
+                stack.pop();
+                result=result+"\n"+ evaluate(left, cur, right);
+                stack.push("TMP"+tmp_keeper);
+            }
+        }
+        return result;
+    }
+    public static String evaluate(String left,String t,String right) {
+        //return a string with \n and \t delimited
+        String out="";
+        out=out+"LD\t"+left+"\n";
+        out=out+opcode(t)+"\t"+right;
+        out=out+"ST\tTMP"+tmp_keeper;
+        tmp_keeper=tmp_keeper+1;
+        return out;
+    }
 }
