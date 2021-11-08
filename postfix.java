@@ -13,11 +13,15 @@ import java.io.PrintStream;
 import java.io.StringReader;
 
 public class Postfix {
+
     static int tmp_keeper = 0;  
-    
+    public Postfix() {
+        
+    }
     public static void main(String args[]) throws IOException{
         //test code: 
         to_postfix(args);
+        
     }
     static int precedence(char c){
         // the order of the operations:
@@ -92,17 +96,8 @@ public class Postfix {
     public static boolean checkinput(String[] input) {
 
         if (input.length>2 | input.length<1) {
-            System.out.print("please use postfix [input] [output] or postfix [input],\n in which case it will be outputted to the input directory \n");
+            System.out.print("please use postfix [input] [output] or postfix [input]");
             return false;
-        }
-        if (input.length==1) {
-            //then the input directory must exist;
-            File file = new File(input[2]);
-            if ( !file.exists()) {
-                System.out.print("file doesnt exist!");
-                return false;
-            }
-            return true;
         }
         else if (input.length==2) {
             File in_dir = new File(input[0]);
@@ -121,7 +116,7 @@ public class Postfix {
     }
     public  static String I2P(String infix) {
         String result = "";
-        Stack<Character> stack = new Stack<>();
+        Stack<Character> stack = new Stack<Character>();
         for (int i = 0; i <infix.length() ; i++) {
             char cur = infix.charAt(i);
             
