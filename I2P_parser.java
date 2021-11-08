@@ -1,22 +1,13 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.util.Stack;
+
 public class I2P_parser {
 
     public static boolean isoperand(char c) {
+        
         return ('0' <= c && c <= '9') || ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
     }
-    private static int precedence(char i) {
 
-        if (i == '(' || i == ')') return 1;
-        else if (i == '-' || i == '+') return 2;
-        else if (i == '*' || i == '/') return 3;
-        else return 0;
-    }
     public static boolean checkparen(String s){
+        //check for valid parenthsization
         int stack = 0;
         for (int i = 0; i < s.length(); ++i) {
             char c = s.charAt(i);
@@ -33,6 +24,7 @@ public class I2P_parser {
     public static boolean isvalid(String s){
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
+            // go through each operand  
             if(isoperand(c) == false && precedence(c) == 0 && c != '(' && c != ')')
                 return false;
         }
@@ -66,7 +58,7 @@ public class I2P_parser {
         }
 
     }
-    public static void main(String[] args) throws IOException {
+    public static void evaluate(String[] args) throws IOException {
         if (! checkinput(args)) {
             return; 
         }
@@ -77,17 +69,24 @@ public class I2P_parser {
         //String[] posts = new String[];
         while (true) {
             String s = in.readLine();
-            
+            //line must end with semicolon:
+
+            if (!s.trim().endsWith(";")) {
+                throw new Exception("Check line's ending semicolon");
+            }
+
             if (isvalid(s)) {
                 if(checkparen(s)){
-                    String postfix = I2P(s);
-                    
+                    String splitted = s.split(";")[0]; 
+                    String postfix = I2P(splitted);
+                    writer.write(postfix);
+		            writer.newLine();
                 }
                 else{
-                    out.println("Syntax Error!");
+                   throw new Exception("Syntax error");
                 }
             } else {
-                out.println("Lexical Error!");
+                throw new Exception("Lexical error");            
             }
         }
     }
